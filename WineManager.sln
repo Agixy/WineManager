@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "WineManager\View.csproj", "{FE558D7F-EE62-4355-ACC6-823D2040EE16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{61828B84-CE62-4337-8C82-1EFCD61D370E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WineManagerService", "WineManagerService\WineManagerService.csproj", "{7930AA1A-C768-4DA9-8D37-4FBAB014B18D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE558D7F-EE62-4355-ACC6-823D2040EE16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE558D7F-EE62-4355-ACC6-823D2040EE16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE558D7F-EE62-4355-ACC6-823D2040EE16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE558D7F-EE62-4355-ACC6-823D2040EE16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61828B84-CE62-4337-8C82-1EFCD61D370E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61828B84-CE62-4337-8C82-1EFCD61D370E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61828B84-CE62-4337-8C82-1EFCD61D370E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61828B84-CE62-4337-8C82-1EFCD61D370E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7930AA1A-C768-4DA9-8D37-4FBAB014B18D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7930AA1A-C768-4DA9-8D37-4FBAB014B18D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7930AA1A-C768-4DA9-8D37-4FBAB014B18D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7930AA1A-C768-4DA9-8D37-4FBAB014B18D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC9B997F-47FC-4F11-9805-3FBF7A4AE0CF}
+	EndGlobalSection
+EndGlobal
