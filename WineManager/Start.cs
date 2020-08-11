@@ -1,6 +1,7 @@
 ﻿using Model;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -28,8 +29,15 @@ namespace View
             {
             service = new WineDao(homeViewId);
             locationsService = new LocationsDao();
-            allButtons = service.GetAllButtons();
-            screenSize = service.GetScreenSize();
+
+            allButtons = TryCatchWraper.TrySql(() => service.GetAllButtons());
+            if (allButtons == default)
+                return;
+
+            screenSize = TryCatchWraper.TrySql(() => service.GetScreenSize());
+            if (screenSize == default)
+                return;
+
             LoadView(homeViewId);
 
             }
@@ -43,6 +51,8 @@ namespace View
         private void LoadView(int screenId)
         {
             dataPanel.Controls.Clear();
+            if (allButtons == null)
+               return;
             var buttons = allButtons.Where(b => b.ParentButtonId == screenId);          
 
             foreach (var button in buttons)
@@ -57,7 +67,9 @@ namespace View
             {
                 dataPanel.Controls.Clear();
 
-                var articles = service.GetArticlesByCategoryId(categoryId);
+                var articles = TryCatchWraper.TrySql(() => service.GetArticlesByCategoryId(categoryId));
+                if (articles == default)
+                    return;
 
                 for (int i = 0; i < articles.Count; i++)
                 {
@@ -145,17 +157,17 @@ namespace View
         private void LoadWineLocationView(WineDto wineDto)
         {
             checkedWine = wineDto;
-            IList<Location> locations;
 
-            if (wineDto.Nr == null)     // TODO: Fix loading 'skrot'
+            if (wineDto.Nr == null)
             {
-                var x = service.GetWineById(wineDto.Id);
-                locations = locationsService.GetLocationsBySkrot(x.Nr);
+                wineDto = TryCatchWraper.TrySql(() => service.GetWineById(wineDto.Id));
+                if (wineDto == default)
+                    return;
             }
-            else
-            {
-                locations = locationsService.GetLocationsBySkrot(wineDto.Nr);
-            }
+
+            IList<Location> locations = TryCatchWraper.TrySql(() => locationsService.GetLocationsBySkrot(wineDto.Nr));
+            if (locations == null)
+                return;
 
             dataPanel.Controls.Clear();
             var wineLocationView = new WineLocation(wineDto, locations, screenSize, locationsService);
@@ -172,7 +184,10 @@ namespace View
         private void BtnSearch_Click(object sender, EventArgs e)
         {
             var wineSkrot = txtWineNumber.Text;
-            var wine = service.GetWineBySkrot(wineSkrot);
+
+            var wine = TryCatchWraper.TrySql(() => service.GetWineBySkrot(wineSkrot));
+            if (wine == default)
+                return;
 
             if(wine != null)
             {
@@ -196,12 +211,18 @@ namespace View
         }
 
         private void ByPlaceButton_Click(object sender, EventArgs e)
-        {          
-            LocationSelector locationSelector = new LocationSelector(locationsService.GetAllLocations().Select(l => l.Name).ToList(), "", locationsService, searcher: true);
+        {   
+            var allLocations = TryCatchWraper.TrySql(() => locationsService.GetAllLocations());
+            if (allLocations == null)
+                return;
+            LocationSelector locationSelector = new LocationSelector(allLocations.Select(l => l.Name).ToList(), "", locationsService, searcher: true);
 
             if (locationSelector.ShowDialog() == DialogResult.OK)
             {
-                var wines = locationsService.GetWinesInLocation(locationSelector.ReturnValue);
+                var wines = TryCatchWraper.TrySql(() => locationsService.GetWinesInLocation(locationSelector.ReturnValue));
+                if (wines == null)
+                    return;
+
                 if (wines.Count() > 0)
                 {
                     MessageBox.Show(string.Join(Environment.NewLine, wines));

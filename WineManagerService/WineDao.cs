@@ -100,6 +100,7 @@ namespace WineManagerService
                     int categoryId = reader.GetIntFromNullableColumn(4);
 
                     var wineId = articleId > 0 ? articleId : 0;
+
                     var wineDto = articleId > 0 ? GetWineById(wineId) : new WineDto(wineId, reader.GetString(9));
                     results.Add(new WineTypeButtonDto()
                     {
@@ -138,7 +139,8 @@ namespace WineManagerService
                          ,ART.[ART_Skrot]
                          ,ART.[ART_Nazwa]     
                    FROM [AXK_ArtXKat] AXK,  [ART_Artykuly] ART         
-                      WHERE AXK.[AXK_KATID] = {categoryId} AND AXK.[AXK_ARTID] = ART.[ART_ID]";
+                      WHERE AXK.[AXK_KATID] = {categoryId} AND AXK.[AXK_ARTID] = ART.[ART_ID]
+                    AND ART.[ART_CzySprzedawany] = 1";
 
             SqlDataReader reader = ExecuteSqlQuery(connectionString, sqlQuery);
 

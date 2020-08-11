@@ -22,18 +22,19 @@ namespace View
 
         public WineLocation(WineDto wineDto, IList<Location> locations, (int, int) screenSize, ILocationsDao service)
         {
+            allLocations = TryCatchWraper.TrySql(() => service.GetAllLocations());
+            if (allLocations == null)
+                return;
             this.screenSize = screenSize;
             this.service = service;
             wine = wineDto;
             this.avaliabeLocations = locations;
-            allLocations = service.GetAllLocations();
             InitializeComponent();
             lblWineName.Text = wine.Name;
             lblWineCategry.Text = wine.CategoryName;
             lblWineNumber.Text = wine.Nr;
 
             AddLocationsToPanel();         
-
         }
 
         private void AddLocationsToPanel()
@@ -82,9 +83,8 @@ namespace View
 
         private void BtnGetWine_Click(object sender, EventArgs e)
         {
-        //    checkedLocation = new Location() { Id = 1 };
-        //    service.GetWineFromLocation(checkedLocation, 222);
-            service.GetWineFromLocation(checkedLocation, wine.Id);
+            TryCatchWraper.TrySql(() => service.GetWineFromLocation(checkedLocation, wine.Id));
+
             btnGetWine.Enabled = false;
             OnWineAddedToLocation(new EventArgs());
         }
@@ -97,11 +97,9 @@ namespace View
             {
                 var selectedLocationName = locationSelector.ReturnValue;
                 var selectedLocation = allLocations.First(l => l.Name.Equals(selectedLocationName));
-               // bool isLocationFull = service.CheckIsLocationFull(selectedLocation.Id);
+                TryCatchWraper.TrySql(() => service.AddWineToLocation(selectedLocation.Id, wine.Id));
 
-                    service.AddWineToLocation(selectedLocation.Id, wine.Id);
-                    OnWineAddedToLocation(new EventArgs());
-                              
+                OnWineAddedToLocation(new EventArgs());
             }
         }
 

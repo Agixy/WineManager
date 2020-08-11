@@ -100,7 +100,15 @@ namespace View
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            if(Service.CheckIsLocationFull(Service.GetLocationByName(txtLocationName.Text).Id) && !allowFulLocation)
+            var location = TryCatchWraper.TrySql(() => Service.GetLocationByName(txtLocationName.Text));
+            if (location == null)
+                return;
+
+            var isLocationFull = TryCatchWraper.TrySql(() => (bool?) Service.CheckIsLocationFull(location.Id));
+            if (isLocationFull == null)
+                return;
+
+            if (isLocationFull.Value && !allowFulLocation)
             {
                 lblLocationFull.Visible = true;
             }
