@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Model;
+using NLog;
 using WineManagerService;
 using WineManagerService.Interfaces;
 
@@ -17,6 +18,8 @@ namespace View
         private (int X, int Y) screenSize;
         private Location checkedLocation;
         private ILocationsDao service;
+        private readonly ILogger logger;
+
 
         public ILocationsDao Service { get; }
 
@@ -33,6 +36,8 @@ namespace View
             lblWineName.Text = wine.Name;
             lblWineCategry.Text = wine.CategoryName;
             lblWineNumber.Text = wine.Nr;
+
+            logger = LogManager.GetLogger(GetType().FullName);
 
             AddLocationsToPanel();         
         }
@@ -83,6 +88,8 @@ namespace View
 
         private void BtnGetWine_Click(object sender, EventArgs e)
         {
+            logger.Info($"POBIERANIE Wino: {wine.Name} - Lokacja: {checkedLocation.Name}");
+
             TryCatchWraper.TrySql(() => service.GetWineFromLocation(checkedLocation, wine.Id));
 
             btnGetWine.Enabled = false;
@@ -97,6 +104,9 @@ namespace View
             {
                 var selectedLocationName = locationSelector.ReturnValue;
                 var selectedLocation = allLocations.First(l => l.Name.Equals(selectedLocationName));
+
+                logger.Info($"DODAWANIE Wino: {wine.Name} - Lokacja: {selectedLocation.Name}");
+
                 TryCatchWraper.TrySql(() => service.AddWineToLocation(selectedLocation.Id, wine.Id));
 
                 OnWineAddedToLocation(new EventArgs());
